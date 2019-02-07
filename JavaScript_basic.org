@@ -1,105 +1,106 @@
 * 定义变量
 
-  #+BEGIN_SRC js 
-    var var1 = 3;
-    var var2;
+#+BEGIN_SRC js
+  var var1 = 3;
+  var var2;
 
-    if (var1 == undefined) {
-        console.log("var1 is undefin");
-    }
-    console.dir(var1);
+  if (var1 == undefined) {
+      console.log("var1 is undefin");
+  }
+  console.dir(var1);
 
-    if (var2 == undefined) {
-        console.log("var2 is undefinded");
-    }
-    console.dir(var2);
-  #+END_SRC
+  if (var2 == undefined) {
+      console.log("var2 is undefinded");
+  }
+  console.dir(var2);
+#+END_SRC
 
-  #+RESULTS:
-  : 3
-  : var2 is undefinded
-  : undefined
-  : undefined
-如果一个变量只定义但未初始化, 就是undefined.
+#+RESULTS:
+: 3
+: var2 is undefinded
+: undefined
+: undefined
+如果一个变量只定义但未初始化, 就是 undefined.
+
 * control flow for loop
 
-  #+BEGIN_SRC js   
-  var myNumbers = [3, 4, 5];
-  for (var i in myNumbers) {
-      console.log(i, myNumbers[i]);
-  }
-  
-  var man = {
-      hands : 2,
-      legs : 2,
-      heads : 1
-  };
-  
-  for (var i in man) {
-      console.log(i, ":", man[i]);
-  }
+#+BEGIN_SRC js
+var myNumbers = [3, 4, 5];
+for (var i in myNumbers) {
+    console.log(i, myNumbers[i]);
+}
 
-  for (var i in man) {
-      if (man.hasOwnProperty(i)) {
-          console.log(i, ":", man[i]);
-      }
-  }
-  #+END_SRC
+var man = {
+    hands : 2,
+    legs : 2,
+    heads : 1
+};
 
-  #+RESULTS:
-  #+begin_example
-  0 3
-  1 4
-  2 5
-  hands : 2
-  legs : 2
-  heads : 1
-  hands : 2
-  legs : 2
-  heads : 1
-  undefined
-  #+end_example
+for (var i in man) {
+    console.log(i, ":", man[i]);
+}
 
-第一个for循环例子是antipattern的, 没有检查hasOwnProperty().
+for (var i in man) {
+    if (man.hasOwnProperty(i)) {
+        console.log(i, ":", man[i]);
+    }
+}
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+0 3
+1 4
+2 5
+hands : 2
+legs : 2
+heads : 1
+hands : 2
+legs : 2
+heads : 1
+undefined
+#+end_example
+
+第一个 for 循环例子是 antipattern 的, 没有检查 hasOwnProperty().
 
 * control flow throw
-   #+BEGIN_SRC html 
-    <!DOCType html public "-//w3c//dtd html 4.01 transitional//en" "http://www.w3.org/tr/html4/loose.dtd">
-    <html>
-    <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
-    <title></title>
-    </head>
-    <body>
-        <h3>open javascript console by pressing f12 key</h3>
-        <script type="text/javascript">
-            var x = prompt("enter a number between 5 and 10:", "");
-            try {
-                if (x > 10) {
-                    throw "err1";
-                } else if (x < 5) {
-                    throw "err2";
-                } else if (isnan(x)) {
-                    throw "err3";
-                }
-            } catch (err) {
-                if (err == "err1") {
-                    document.write("error! the value is too high.");
-                }
-                if (err == "err2") {
-                    document.write("error! the value is too low.");
-                }
-                if (err == "Err3") {
-                    document.write("Error! The value is not a number.");
-                }
+#+BEGIN_SRC html
+<!DOCType html public "-//w3c//dtd html 4.01 transitional//en" "http://www.w3.org/tr/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+<title></title>
+</head>
+<body>
+    <h3>open javascript console by pressing f12 key</h3>
+    <script type="text/javascript">
+        var x = prompt("enter a number between 5 and 10:", "");
+        try {
+            if (x > 10) {
+                throw "err1";
+            } else if (x < 5) {
+                throw "err2";
+            } else if (isnan(x)) {
+                throw "err3";
             }
-        </script>
-    </body>
-    </html>
-  #+END_SRC
+        } catch (err) {
+            if (err == "err1") {
+                document.write("error! the value is too high.");
+            }
+            if (err == "err2") {
+                document.write("error! the value is too low.");
+            }
+            if (err == "Err3") {
+                document.write("Error! The value is not a number.");
+            }
+        }
+    </script>
+</body>
+</html>
+#+END_SRC
 * control flow try catch
 
-  #+BEGIN_SRC js 
+  #+BEGIN_SRC js
     var txt = ""
     function message() {
         try {
@@ -118,289 +119,292 @@
   : There was an error on this page.
   : Error description: addAlert is not defined
   : Click OK to continue.
-  : 
-  : 
+  :
+  :
   : undefined
 
 * function definitions
 
-  #+BEGIN_SRC js
-  // #1: Declare a named function
-  function myNamedFunction(something) {
-      console.log(something);
-  }
+#+BEGIN_SRC js
+// #1: Declare a named function
+function myNamedFunction(something) {
+    console.log(something);
+}
 
-  // #2: Create an anonymous function through function expression
-  // and assign it to myFunction1 variable
-  var myFunction1 = function (something) {
-      console.log(something);
-  }
+// #2: Create an anonymous function through function expression
+// and assign it to myFunction1 variable.
+var myFunction1 = function (something) {
+    console.log(something);
+}
 
-  // Inspect the owning object of the functions,
-  // the global object in this example since the 
-  // functions are declared in the global scope
-  console.dir(this);
-  
-  var myVar = myNamedFunction;
-  
-  // #3: Create a function through Function constructor
-  var myFunction3 = new Function("x", "y", "return x+y");
+// Inspect the owning object of the functions,
+// the global object in this example since the
+// functions are declared in the global scope.
+console.dir(this);
 
-  // Invoke functions
-  myNamedFunction("Life is good!");
-  myFunction1("Hello!");
-  myVar("Goodbye!");
-  console.log(myFunction3(3, 5));
-  #+END_SRC
+var myVar = myNamedFunction;
 
-  #+RESULTS:
-  #+begin_example
-  { DTRACE_NET_SERVER_CONNECTION: [Function],
-    DTRACE_NET_STREAM_END: [Function],
-    DTRACE_HTTP_SERVER_REQUEST: [Function],
-    DTRACE_HTTP_SERVER_RESPONSE: [Function],
-    DTRACE_HTTP_CLIENT_REQUEST: [Function],
-    DTRACE_HTTP_CLIENT_RESPONSE: [Function],
-    global: [Circular],
-    process: 
-     process {
-       title: 'node',
-       version: 'v6.11.3',
-       moduleLoadList: 
-        [ 'Binding contextify',
-          'Binding natives',
-          'Binding config',
-          'NativeModule events',
-          'NativeModule util',
-          'Binding uv',
-          'NativeModule buffer',
-          'Binding buffer',
-          'Binding util',
-          'NativeModule internal/util',
-          'NativeModule timers',
-          'Binding timer_wrap',
-          'NativeModule internal/linkedlist',
-          'NativeModule assert',
-          'NativeModule internal/process',
-          'NativeModule internal/process/warning',
-          'NativeModule internal/process/next_tick',
-          'NativeModule internal/process/promises',
-          'NativeModule internal/process/stdio',
-          'Binding constants',
-          'NativeModule path',
-          'NativeModule module',
-          'NativeModule internal/module',
-          'NativeModule vm',
-          'NativeModule fs',
-          'Binding fs',
-          'NativeModule stream',
-          'NativeModule internal/streams/legacy',
-          'NativeModule _stream_readable',
-          'NativeModule internal/streams/BufferList',
-          'NativeModule _stream_writable',
-          'NativeModule _stream_duplex',
-          'NativeModule _stream_transform',
-          'NativeModule _stream_passthrough',
-          'Binding fs_event_wrap',
-          'NativeModule sys',
-          'NativeModule console',
-          'Binding tty_wrap',
-          'NativeModule net',
-          'NativeModule internal/net',
-          'Binding cares_wrap',
-          'Binding tcp_wrap',
-          'Binding pipe_wrap',
-          'Binding stream_wrap' ],
-       versions: 
-        { http_parser: '2.7.0',
-          node: '6.11.3',
-          v8: '5.1.281.107',
-          uv: '1.11.0',
-          zlib: '1.2.11',
-          ares: '1.10.1-DEV',
-          icu: '58.2',
-          modules: '48',
-          openssl: '1.0.2l' },
-       arch: 'x64',
-       platform: 'darwin',
-       release: 
-        { name: 'node',
-          lts: 'Boron',
-          sourceUrl: 'https://nodejs.org/download/release/v6.11.3/node-v6.11.3.tar.gz',
-          headersUrl: 'https://nodejs.org/download/release/v6.11.3/node-v6.11.3-headers.tar.gz' },
-       argv: 
-        [ '/usr/local/bin/node',
-          '/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-80034K8/js-script-8003KIk' ],
-       execArgv: [],
-       env: 
-        { DISPLAY: 'cdeMacBook-Air.local',
-          TERM: 'dumb',
-          MANPATH: '',
-          LANG: 'zh_CN.UTF-8',
-          XPC_FLAGS: '0x0',
-          SECURITYSESSIONID: '186a7',
-          USER: 'c',
-          XPC_SERVICE_NAME: 'org.gnu.Emacs.9748',
-          LOGNAME: 'c',
-          PATH: '/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin',
-          SSH_AUTH_SOCK: '/private/tmp/com.apple.launchd.kiDtt421OE/Listeners',
-          Apple_PubSub_Socket_Render: '/private/tmp/com.apple.launchd.N2iUJ8UBjd/Render',
-          SHELL: '/bin/zsh',
-          HOME: '/Users/c',
-          __CF_USER_TEXT_ENCODING: '0x1F5:0x19:0x34',
-          TMPDIR: '/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/',
-          SHLVL: '0',
-          PWD: '/Users/c/JavaScript',
-          OLDPWD: '/Users/c/JavaScript',
-          _: '/usr/local/bin/node' },
-       pid: 8508,
-       features: 
-        { debug: false,
-          uv: true,
-          ipv6: true,
-          tls_npn: true,
-          tls_alpn: true,
-          tls_sni: true,
-          tls_ocsp: true,
-          tls: true },
-       _needImmediateCallback: false,
-       execPath: '/usr/local/bin/node',
-       debugPort: 5858,
-       _startProfilerIdleNotifier: [Function: _startProfilerIdleNotifier],
-       _stopProfilerIdleNotifier: [Function: _stopProfilerIdleNotifier],
-       _getActiveRequests: [Function: _getActiveRequests],
-       _getActiveHandles: [Function: _getActiveHandles],
-       reallyExit: [Function: reallyExit],
-       abort: [Function: abort],
-       chdir: [Function: chdir],
-       cwd: [Function: cwd],
-       umask: [Function: umask],
-       getuid: [Function: getuid],
-       geteuid: [Function: geteuid],
-       setuid: [Function: setuid],
-       seteuid: [Function: seteuid],
-       setgid: [Function: setgid],
-       setegid: [Function: setegid],
-       getgid: [Function: getgid],
-       getegid: [Function: getegid],
-       getgroups: [Function: getgroups],
-       setgroups: [Function: setgroups],
-       initgroups: [Function: initgroups],
-       _kill: [Function: _kill],
-       _debugProcess: [Function: _debugProcess],
-       _debugPause: [Function: _debugPause],
-       _debugEnd: [Function: _debugEnd],
-       hrtime: [Function: hrtime],
-       cpuUsage: [Function: cpuUsage],
-       dlopen: [Function: dlopen],
-       uptime: [Function: uptime],
-       memoryUsage: [Function: memoryUsage],
-       binding: [Function: binding],
-       _linkedBinding: [Function: _linkedBinding],
-       _setupDomainUse: [Function: _setupDomainUse],
-       _events: 
-        { warning: [Function],
-          newListener: [Function],
-          removeListener: [Function] },
-       _rawDebug: [Function],
-       _eventsCount: 3,
-       domain: null,
-       _maxListeners: undefined,
-       _fatalException: [Function],
-       _exiting: false,
-       assert: [Function],
-       config: { target_defaults: [Object], variables: [Object] },
-       emitWarning: [Function],
-       nextTick: [Function: nextTick],
-       _tickCallback: [Function: _tickCallback],
-       _tickDomainCallback: [Function: _tickDomainCallback],
-       stdout: [Getter],
-       stderr: [Getter],
-       stdin: [Getter],
-       openStdin: [Function],
-       exit: [Function],
-       kill: [Function],
-       argv0: 'node',
-       mainModule: 
-        Module {
-          id: '.',
-          exports: {},
-          parent: null,
-          filename: '/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-80034K8/js-script-8003KIk',
-          loaded: false,
-          children: [],
-          paths: [Object] } },
-    Buffer: 
-     { [Function: Buffer]
-       poolSize: 8192,
-       from: [Function],
-       alloc: [Function],
-       allocUnsafe: [Function],
-       allocUnsafeSlow: [Function],
-       isBuffer: [Function: isBuffer],
-       compare: [Function: compare],
-       isEncoding: [Function],
-       concat: [Function],
-       byteLength: [Function: byteLength] },
-    clearImmediate: [Function],
-    clearInterval: [Function],
-    clearTimeout: [Function],
-    setImmediate: [Function],
-    setInterval: [Function],
-    setTimeout: [Function],
-    console: [Getter] }
-  Life is good!
-  Hello!
-  Goodbye!
-  8
-  undefined
-  #+end_example
+// #3: Create a function through Function constructor
+var myFunction3 = new Function("x", "y", "return x+y");
+
+// Invoke functions
+myNamedFunction("Life is good!");
+myFunction1("Hello!");
+myVar("Goodbye!");
+console.log(myFunction3(3, 5));
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{ DTRACE_NET_SERVER_CONNECTION: [Function],
+  DTRACE_NET_STREAM_END: [Function],
+  DTRACE_HTTP_SERVER_REQUEST: [Function],
+  DTRACE_HTTP_SERVER_RESPONSE: [Function],
+  DTRACE_HTTP_CLIENT_REQUEST: [Function],
+  DTRACE_HTTP_CLIENT_RESPONSE: [Function],
+  global: [Circular],
+  process:
+   process {
+     title: 'node',
+     version: 'v6.11.3',
+     moduleLoadList:
+      [ 'Binding contextify',
+        'Binding natives',
+        'Binding config',
+        'NativeModule events',
+        'NativeModule util',
+        'Binding uv',
+        'NativeModule buffer',
+        'Binding buffer',
+        'Binding util',
+        'NativeModule internal/util',
+        'NativeModule timers',
+        'Binding timer_wrap',
+        'NativeModule internal/linkedlist',
+        'NativeModule assert',
+        'NativeModule internal/process',
+        'NativeModule internal/process/warning',
+        'NativeModule internal/process/next_tick',
+        'NativeModule internal/process/promises',
+        'NativeModule internal/process/stdio',
+        'Binding constants',
+        'NativeModule path',
+        'NativeModule module',
+        'NativeModule internal/module',
+        'NativeModule vm',
+        'NativeModule fs',
+        'Binding fs',
+        'NativeModule stream',
+        'NativeModule internal/streams/legacy',
+        'NativeModule _stream_readable',
+        'NativeModule internal/streams/BufferList',
+        'NativeModule _stream_writable',
+        'NativeModule _stream_duplex',
+        'NativeModule _stream_transform',
+        'NativeModule _stream_passthrough',
+        'Binding fs_event_wrap',
+        'NativeModule sys',
+        'NativeModule console',
+        'Binding tty_wrap',
+        'NativeModule net',
+        'NativeModule internal/net',
+        'Binding cares_wrap',
+        'Binding tcp_wrap',
+        'Binding pipe_wrap',
+        'Binding stream_wrap' ],
+     versions:
+      { http_parser: '2.7.0',
+        node: '6.11.3',
+        v8: '5.1.281.107',
+        uv: '1.11.0',
+        zlib: '1.2.11',
+        ares: '1.10.1-DEV',
+        icu: '58.2',
+        modules: '48',
+        openssl: '1.0.2l' },
+     arch: 'x64',
+     platform: 'darwin',
+     release:
+      { name: 'node',
+        lts: 'Boron',
+        sourceUrl: 'https://nodejs.org/download/release/v6.11.3/node-v6.11.3.tar.gz',
+        headersUrl: 'https://nodejs.org/download/release/v6.11.3/node-v6.11.3-headers.tar.gz' },
+     argv:
+      [ '/usr/local/bin/node',
+        '/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-80034K8/js-script-8003KIk' ],
+     execArgv: [],
+     env:
+      { DISPLAY: 'cdeMacBook-Air.local',
+        TERM: 'dumb',
+        MANPATH: '',
+        LANG: 'zh_CN.UTF-8',
+        XPC_FLAGS: '0x0',
+        SECURITYSESSIONID: '186a7',
+        USER: 'c',
+        XPC_SERVICE_NAME: 'org.gnu.Emacs.9748',
+        LOGNAME: 'c',
+        PATH: '/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin',
+        SSH_AUTH_SOCK: '/private/tmp/com.apple.launchd.kiDtt421OE/Listeners',
+        Apple_PubSub_Socket_Render: '/private/tmp/com.apple.launchd.N2iUJ8UBjd/Render',
+        SHELL: '/bin/zsh',
+        HOME: '/Users/c',
+        __CF_USER_TEXT_ENCODING: '0x1F5:0x19:0x34',
+        TMPDIR: '/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/',
+        SHLVL: '0',
+        PWD: '/Users/c/JavaScript',
+        OLDPWD: '/Users/c/JavaScript',
+        _: '/usr/local/bin/node' },
+     pid: 8508,
+     features:
+      { debug: false,
+        uv: true,
+        ipv6: true,
+        tls_npn: true,
+        tls_alpn: true,
+        tls_sni: true,
+        tls_ocsp: true,
+        tls: true },
+     _needImmediateCallback: false,
+     execPath: '/usr/local/bin/node',
+     debugPort: 5858,
+     _startProfilerIdleNotifier: [Function: _startProfilerIdleNotifier],
+     _stopProfilerIdleNotifier: [Function: _stopProfilerIdleNotifier],
+     _getActiveRequests: [Function: _getActiveRequests],
+     _getActiveHandles: [Function: _getActiveHandles],
+     reallyExit: [Function: reallyExit],
+     abort: [Function: abort],
+     chdir: [Function: chdir],
+     cwd: [Function: cwd],
+     umask: [Function: umask],
+     getuid: [Function: getuid],
+     geteuid: [Function: geteuid],
+     setuid: [Function: setuid],
+     seteuid: [Function: seteuid],
+     setgid: [Function: setgid],
+     setegid: [Function: setegid],
+     getgid: [Function: getgid],
+     getegid: [Function: getegid],
+     getgroups: [Function: getgroups],
+     setgroups: [Function: setgroups],
+     initgroups: [Function: initgroups],
+     _kill: [Function: _kill],
+     _debugProcess: [Function: _debugProcess],
+     _debugPause: [Function: _debugPause],
+     _debugEnd: [Function: _debugEnd],
+     hrtime: [Function: hrtime],
+     cpuUsage: [Function: cpuUsage],
+     dlopen: [Function: dlopen],
+     uptime: [Function: uptime],
+     memoryUsage: [Function: memoryUsage],
+     binding: [Function: binding],
+     _linkedBinding: [Function: _linkedBinding],
+     _setupDomainUse: [Function: _setupDomainUse],
+     _events:
+      { warning: [Function],
+        newListener: [Function],
+        removeListener: [Function] },
+     _rawDebug: [Function],
+     _eventsCount: 3,
+     domain: null,
+     _maxListeners: undefined,
+     _fatalException: [Function],
+     _exiting: false,
+     assert: [Function],
+     config: { target_defaults: [Object], variables: [Object] },
+     emitWarning: [Function],
+     nextTick: [Function: nextTick],
+     _tickCallback: [Function: _tickCallback],
+     _tickDomainCallback: [Function: _tickDomainCallback],
+     stdout: [Getter],
+     stderr: [Getter],
+     stdin: [Getter],
+     openStdin: [Function],
+     exit: [Function],
+     kill: [Function],
+     argv0: 'node',
+     mainModule:
+      Module {
+        id: '.',
+        exports: {},
+        parent: null,
+        filename: '/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-80034K8/js-script-8003KIk',
+        loaded: false,
+        children: [],
+        paths: [Object] } },
+  Buffer:
+   { [Function: Buffer]
+     poolSize: 8192,
+     from: [Function],
+     alloc: [Function],
+     allocUnsafe: [Function],
+     allocUnsafeSlow: [Function],
+     isBuffer: [Function: isBuffer],
+     compare: [Function: compare],
+     isEncoding: [Function],
+     concat: [Function],
+     byteLength: [Function: byteLength] },
+  clearImmediate: [Function],
+  clearInterval: [Function],
+  clearTimeout: [Function],
+  setImmediate: [Function],
+  setInterval: [Function],
+  setTimeout: [Function],
+  console: [Getter] }
+Life is good!
+Hello!
+Goodbye!
+8
+undefined
+#+end_example
 
 * calling a function via event
 
-  #+BEGIN_SRC html 
-  <input type="button" value="Click me" onclick="displayMessage()">
-  #+END_SRC
+#+BEGIN_SRC html
+<input type="button" value="Click me" onclick="displayMessage()">
+#+END_SRC
 
-* JavaScript类型
+* JavaScript 类型
 ** primitive types
 Boolean, Numberic, String
 The primitive types are treated by JavaScript as value types and
 when you pass them around they go as values.
 ** Complex types
 Array, Object
-A complex type is an object, be it either standard or custom moade.
+A complex type is an object, be it either standard or custom mode.
 Its home is the heap and goes everywhere by reference.
 注意: 原始类型和复合类型传递值的不同之处, 一个是传递值, 一个是传递引用.
+
 * global object
 In browsers, the window object is the global object.
 All global variables and functions become properties of the global object.
+
 * create javascript object
 ** create javascript object as a Hash Literal
 
-   #+BEGIN_SRC js
-     var personObj = {
-         firstname: "John",
-         lastname: "Doe",
-         age: 50,
-         tellYourAge: function() {
-             console.log("The age is " + this.age);
-         },
-         tellSomething: function(something) {
-             console.log(something);
-         }
+#+BEGIN_SRC js
+ var personObj = {
+     firstname: "John",
+     lastname: "Doe",
+     age: 50,
+     tellYourAge: function() {
+         console.log("The age is " + this.age);
+     },
+     tellSomething: function(something) {
+         console.log(something);
      }
+ }
 
-     personObj.tellYourAge();
-     personObj.tellSomething("Life is good!");
-   #+END_SRC
+ personObj.tellYourAge();
+ personObj.tellSomething("Life is good!");
+#+END_SRC
 
-   #+RESULTS:
-   : The age is 50
-   : Life is good!
-   : undefined
+#+RESULTS:
+: The age is 50
+: Life is good!
+: undefined
+
 * function object as first class object
-** function object can be assigned to a variable 
+** function object can be assigned to a variable
 ** function object can be passed as an argument to another function
 
    #+BEGIN_SRC js
@@ -423,7 +427,7 @@ All global variables and functions become properties of the global object.
    #+BEGIN_SRC js
      function myMethod(x) {
          console.log("mymethod is invoked with " + x);
-     }   
+     }
 
      function hisMethod() {
          return myMethod;
@@ -442,12 +446,12 @@ All global variables and functions become properties of the global object.
    : mymethod is invoked with Function as a return value
    : [Function: hisMethod]
    : undefined
-   
+
 * self-invoking function
 ** what is a self-invoking function
 self-invoking function lets you define and invoke a function
 at the same time.
-+ self-invoking function is typically anonymous (because you 
++ self-invoking function is typically anonymous (because you
 don't need to reference it by name).
 + sometimes called immediately-invoked function.
 
@@ -502,7 +506,7 @@ code that solves global conflict of $ between jquery.js and prototype.js
     var myVar;
 
     function myFunction() {
-        myVar = "I am visiable!"; 
+        myVar = "I am visiable!";
     }
 
     console.log("myVar: " + myVar);
@@ -524,13 +528,13 @@ code that solves global conflict of $ between jquery.js and prototype.js
   myVar: undefined
   this.myVar: undefined
   this.myFunction: function myFunction() {
-      myVar = "I am visiable!"; 
+      myVar = "I am visiable!";
   }
   ----------
   myVar: I am visiable!
   this.myVar: I am visiable!
   this.myFunction: function myFunction() {
-      myVar = "I am visiable!"; 
+      myVar = "I am visiable!";
   }
   undefined
   #+end_example
@@ -540,7 +544,7 @@ code that solves global conflict of $ between jquery.js and prototype.js
     var myVar;
 
     function myFunction() {
-        var myVar = "I am visiable!"; 
+        var myVar = "I am visiable!";
     }
 
     console.log("myVar: " + myVar);
@@ -561,22 +565,22 @@ code that solves global conflict of $ between jquery.js and prototype.js
   myVar: undefined
   this.myVar: undefined
   this.myFunction: function myFunction() {
-      var myVar = "I am visiable!"; 
+      var myVar = "I am visiable!";
   }
   ----------
   myVar: undefined
   this.myVar: undefined
   this.myFunction: function myFunction() {
-      var myVar = "I am visiable!"; 
+      var myVar = "I am visiable!";
   }
   undefined
   #+end_example
-注意这两个例子中, myFunction()函数中myVar变量前一个有加关键字var, 一个没有,
+注意这两个例子中, myFunction()函数中 myVar 变量前一个有加关键字 var, 一个没有,
 因此产生的差异.
 
 #+BEGIN_SRC js
 var myVar = function myFunction() {
-    
+
 }
 try {
     console.log("this.myFunction" + myFunction);
@@ -600,7 +604,7 @@ ReferenceError: myFunction is not defined
     at startup (bootstrap_node.js:149:9)
 undefined
 #+end_example
-为什么会出现myFunction是undefined是因为在全局对象中是没有'myFunction'这个
+为什么会出现 myFunction 是 undefined 是因为在全局对象中是没有'myFunction'这个
 属性的.
 * closure
 
@@ -692,7 +696,7 @@ name and myPrivateGetAgeMethod properties can not be
 accessed directory.
 ** usage 2
 
-   #+BEGIN_SRC html 
+   #+BEGIN_SRC html
      <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
      <html>
      <head>
@@ -736,9 +740,9 @@ accessed directory.
              // function gets executed with value of 5.
              addLinksExample1();
          </script>
-	
+
          <br/>
-	
+
          <script type="text/javascript">
              //
              // Use Closure to the solve the problem above
@@ -771,107 +775,108 @@ accessed directory.
 
 * what does "this" refer to?
 
-  #+BEGIN_SRC js
-    var personObj = {
-        fisrtname: "John",
-        lastname: "Doe",
-        age: 50,
-        tellYourAge: function() {
-            console.log("The age is " + this.age);
-            console.dir(this);
-        }
+#+BEGIN_SRC js
+var personObj = {
+    fisrtname: "John",
+    lastname: "Doe",
+    age: 50,
+    tellYourAge: function() {
+        console.log("The age is " + this.age);
+        console.dir(this);
     }
+}
 
-    console.log(personObj.fisrtname);
-    personObj.tellYourAge();
-  #+END_SRC
+console.log(personObj.fisrtname);
+personObj.tellYourAge();
+#+END_SRC
 
-  #+RESULTS:
-  : John
-  : The age is 50
-  : { fisrtname: 'John',
-  :   lastname: 'Doe',
-  :   age: 50,
-  :   tellYourAge: [Function: tellYourAge] }
-  : undefined
-In JavaScript, "this" refers to the object that a function is
-a method of.
+#+RESULTS:
+: John
+: The age is 50
+: { fisrtname: 'John',
+:   lastname: 'Doe',
+:   age: 50,
+:   tellYourAge: [Function: tellYourAge] }
+: undefined
+
+In JavaScript, "this" refers to the object that a function is a method of.
 In global scope, it refers to global object.
+
 * inheritance
 
-  #+BEGIN_SRC js
-    var a = {
-        x: 10,
-        calculate: function(z) {
-            return this.x + this.y + z;
-        }
-    }
+#+BEGIN_SRC js
+  var a = {
+      x: 10,
+      calculate: function(z) {
+          return this.x + this.y + z;
+      }
+  }
 
-    var b = {
-        y: 20,
-        __proto__: a
-    }
+  var b = {
+      y: 20,
+      __proto__: a
+  }
 
-    var c = {
-        y:30,
-        __proto__: a
-    }
+  var c = {
+      y:30,
+      __proto__: a
+  }
 
-    console.log(b.calculate(30));
-    console.log(c.calculate(40));
-  #+END_SRC
+  console.log(b.calculate(30));
+  console.log(c.calculate(40));
+#+END_SRC
 
-  #+RESULTS:
-  : 60
-  : 80
-  : undefined
+#+RESULTS:
+: 60
+: 80
+: undefined
 
 ** object.getPrototypeOf(obj)
 
-   #+BEGIN_SRC js
-     var a = {
-         x: 10,
-         calculate: function(z) {
-             return this.x + this.y + z;
-         }
+#+BEGIN_SRC js
+ var a = {
+     x: 10,
+     calculate: function(z) {
+         return this.x + this.y + z;
      }
+ }
 
-     var b = {
-         y: 20,
-         __proto__: a
-     }
+ var b = {
+     y: 20,
+     __proto__: a
+ }
 
-     var c = {
-         y:30,
-         __proto__: a
-     }
+ var c = {
+     y:30,
+     __proto__: a
+ }
 
-     console.log(Object.getPrototypeOf(a));
-     console.log(a.__proto__);
-     console.log(Object.getPrototypeOf(b));
-     console.log(b.__proto__);
-     console.log(Object.getPrototypeOf(c));
-     console.log(c.__proto__);
-   #+END_SRC
+ console.log(Object.getPrototypeOf(a));
+ console.log(a.__proto__);
+ console.log(Object.getPrototypeOf(b));
+ console.log(b.__proto__);
+ console.log(Object.getPrototypeOf(c));
+ console.log(c.__proto__);
+#+END_SRC
 
-   #+RESULTS:
-   : {}
-   : {}
-   : { x: 10, calculate: [Function: calculate] }
-   : { x: 10, calculate: [Function: calculate] }
-   : { x: 10, calculate: [Function: calculate] }
-   : { x: 10, calculate: [Function: calculate] }
-   : undefined
+#+RESULTS:
+: {}
+: {}
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+: undefined
 __proto__ field is not standard event through it is supported by most JavsScript implementations.
 ECMAScript 5+ compliant engines now provide a standard way to access internal prototype of a JavaScript object through getPrototypeOf()
 method.
 
 ** ConstructorFunction.prototype
 Besides creation of objects, a constructor function does another useful thing — it automatically sets a “function prototype” object for newly created objects.
-- Thisfunction prototype object is stored in the <ConstructorFunction>.prototype property
+- Thisfunction prototype object is stored in the <Constructor Function>.prototype property
 - This is different from__proto__ property
 When a JavaScript object is created from the Constructor Function, the __proto__ property of the resulting object points to the function prototype object
-- In other words,anyproperties and methods added to the function prototype object are available to the resulting object
+- In other words,any properties and methods added to the function prototype object are available to the resulting object
 
 #+BEGIN_SRC js
   // Function constructor
@@ -929,7 +934,7 @@ undefined
 [[file:./screenshotImg/javascript_inheritance_1.png]]
 [[file:./screenshotImg/javascript_inheritance.png]]
 
-修改Foo()构造器中"this.y = y"为"var y = y", 看看结果有何不同?
+修改 Foo()构造器中"this.y = y"为"var y = y", 看看结果有何不同?
 #+BEGIN_SRC js
   // Function constructor
   function Foo(y) {
