@@ -1,0 +1,517 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "/screenshotImg")); -*-
+#+LATEX_CLASS: ctexbook
+* React.js 简介
+React.js 是一个帮助你构建页面 UI 的库. 如果你熟悉 MVC 概念的话, 那么 React 的组件就
+相当于 MVC 里面的 View. 如果你不熟悉也没关系, 你可以简单地理解为,React.js 将帮助
+我们将界面分成了各个独立的小块, 每一个块就是组件, 这些组件之间可以组合, 嵌套, 就成
+了我们的页面.
+
+一个组件的显示形态和行为有可能是由某些数据决定的. 而数据是可能发生改变的, 这时候组
+件的显示形态就会发生相应的改变. 而 React.js 也提供了一种非常高效的方式帮助我们做到
+了数据和组件显示形态之间的同步.
+
+React.js 不是一个框架, 它只是一个库. 它只提供 UI(view) 层面的解决方案. 在实际的项
+目当中, 它并不能解决我们所有的问题, 需要结合其它的库, 例如 Redux,React-router 等来
+协助提供完整的解决方法.
+
+* 前端组件化(一): 从一个简单的例子讲起
+很多课程一上来就给大家如何配置环境, 怎么写 React.js 组件. 但是本课程还是希望大家对问题的根源有一个更加深入的了解, 其实很多的库, 框架都是解决类似的问题. 只有我们对这些库, 框架解决的问题有深入的了解和思考以后, 我们才能得心应手地使用它们, 并且有新的框架出来也不会太过迷茫————因为其实它们解决都是同一个问题.
+
+这两节课我们来探讨一下是什么样的问题导致了我们需要前端页面进行组件化, 前端页面的组件化需要解决什么样的问题. 后续课程我们再来看看 React.js 是怎么解决这些问题的.
+
+所以这几节所讲的内容将和 React.js 的内容没有太大的关系, 但是如果你能顺利了解这几节的内容, 那么后面那些对新手来说很复杂的概念对你来说就是非常自然的事.
+
+** 一个简单的点赞功能
+ 我们会从一个简单的点赞功能讲起. 假设现在我们需要实现一个点赞, 取消点赞的功能.
+
+ [[file:screenshotImg/B7575C67-64F8-4A13-9C63-4D6805FA360D.png][file:screenshotImg/B7575C67-64F8-4A13-9C63-4D6805FA360D.png]]
+
+ 如果你对前端稍微有一点了解, 你就顺手拈来:
+
+ #+BEGIN_SRC html
+ <body>
+   <div class='wrapper'>
+     <button class='like-btn'>
+       <span class='like-text'>点赞</span>
+       <span>👍</span>
+     </button>
+   </div>
+ </body>
+ #+END_SRC
+
+ 为了模拟现实当中的实际情况, 所以这里特意把这个 button 里面的 HTML 结构搞得稍微复杂一些. 有了这个 HTML 结构, 现在就给它加入一些 JavaScript 的行为:
+
+ #+BEGIN_SRC javascript
+ const button = document.querySelector('.like-btn')
+     const buttonText = button.querySelector('.like-text')
+     let isLiked = false
+     button.addEventListener('click', () => {
+             isLiked = !isLiked
+             if (isLiked) {
+                 buttonText.innerHTML = '取消'
+             } else {
+                 buttonText.innerHTML = '点赞'
+             }
+         }, false)
+ #+END_SRC
+
+ 功能和实现都很简单, 按钮已经可以提供点赞和取消点赞的功能. 这时候你的同事跑过来了, 说他很喜欢你的按钮, 他也想用你写的这个点赞功能. 这时候问题就来了, 你就会发现这种实现方式很致命: 你的同事要把整个 button 和里面的结构复制过去, 还有整段 JavaScript 代码也要复制过去. 这样的实现方式没有任何可复用性.
+
+** 结构复用
+ 现在我们来重新编写这个点赞功能, 让它具备一定的可复用. 这次我们先写一个类, 这个类有 render 方法, 这个方法里面直接返回一个表示 HTML 结构的字符串:
+
+ #+BEGIN_SRC javascript
+ class LikeButton {
+    render () {
+        return `
+         <button id='like-btn'>
+           <span class='like-text'>赞</span>
+           <span>👍</span>
+         </button>
+       `
+    }
+ }
+ #+END_SRC
+
+ 然后可以用这个类来构建不同的点赞功能的实例, 然后把它们插到页面中.
+
+ #+BEGIN_SRC javascript
+ const wrapper = document.querySelector('.wrapper')
+ const likeButton1 = new LikeButton()
+ wrapper.innerHTML = likeButton1.render()
+
+ const likeButton2 = new LikeButton()
+ wrapper.innerHTML += likeButton2.render()
+ #+END_SRC
+
+ 这里非常暴力地使用了 innerHTML , 把两个按钮粗鲁地插入了 wrapper 当中. 虽然你可能会对这种实现方式非常不满意, 但我们还是勉强了实现了结构的复用. 我们后面再来优化它.
+
+** 实现简单的组件化
+ 你一定会发现, 现在的按钮是死的, 你点击它它根本不会有什么反应. 因为根本没有往上面添加事件. 但是问题来了, LikeButton 类里面是虽然说有一个 button, 但是这玩意根本就是在字符串里面的. 你怎么能往一个字符串里面添加事件呢?DOM 事件的 API 只有 DOM 结构才能用.
+
+ 我们需要 DOM 结构, 准确地来说: 我们需要这个点赞功能的 HTML 字符串表示的 DOM 结构. 假设我们现在有一个函数 =createDOMFromString=, 你往这个函数传入 HTML 字符串, 但是它会把相应的 DOM 元素返回给你. 这个问题就可以解决了.
+
+ #+CAPTION: createDOMFromString
+ #+BEGIN_SRC javascript
+ // ::String => ::Document
+ const createDOMFromString = (domString) => {
+     const div = document.createElement('div')
+     div.innerHTML = domString
+     return div
+ }
+ #+END_SRC
+ <<createDOMFromString>>
+
+ 先不用管这个函数应该怎么实现, 先知道它是干嘛的. 拿来用就好, 这时候用它来改写一下 LikeButton 类:
+
+ #+CAPTION: render
+ #+BEGIN_SRC javascript
+ class LikeButton {
+     render () {
+         this.el = createDOMFromString(`
+         <button class='like-button'>
+           <span class='like-text'>点赞</span>
+           <span>👍</span>
+         </button>
+       `)
+         this.el.addEventListener('click', () => console.log('click'), false)
+         return this.el
+     }
+ }
+ #+END_SRC
+ <<render>>
+
+ 现在 render() 返回的不是一个 html 字符串了, 而是一个由这个 html 字符串所生成的 DOM. 在返回 DOM 元素之前会先给这个 DOM 元素上添加事件再返回.
+
+ 因为现在 render 返回的是 DOM 元素, 所以不能用 innerHTML 暴力地插入 wrapper. 而是要用 =DOM API= 插进去.
+
+ #+BEGIN_SRC javascript :results valuse list
+ const wrapper = document.querySelector('.wrapper')
+
+ const likeButton1 = new LikeButton()
+ wrapper.appendChild(likeButton1.render())
+
+ const likeButton2 = new LikeButton()
+ wrapper.appendChild(likeButton2.render())
+ #+END_SRC
+
+ 现在你点击这两个按钮, 每个按钮都会在控制台打印 click, 说明事件绑定成功了. 但是按钮上的文本还是没有发生改变, 只要稍微改动一下 LikeButton 的代码就可以完成完整的功能:
+
+ #+BEGIN_SRC javascript
+ class LikeButton {
+     constructor () {
+         this.state = { isLiked: false }
+     }
+
+     changeLikeText () {
+         const likeText = this.el.querySelector('.like-text')
+         this.state.isLiked = !this.state.isLiked
+         likeText.innerHTML = this.state.isLiked ? '取消' : '点赞'
+     }
+
+     render () {
+         this.el = createDOMFromString(`
+         <button class='like-button'>
+           <span class='like-text'>点赞</span>
+           <span>👍</span>
+         </button>
+       `)
+         this.el.addEventListener('click', this.changeLikeText.bind(this), false)
+         return this.el
+     }
+ }
+ #+END_SRC
+
+ 这里的代码稍微长了一些, 但是还是很好理解. 只不过是在给 LikeButton 类添加了构造函数, 这个构造函数会给每一个 LikeButton 的实例添加一个对象 state,state 里面保存了每个按钮自己是否点赞的状态. 还改写了原来的事件绑定函数: 原来只打印 click, 现在点击的按钮的时候会调用 changeLikeText 方法, 这个方法会根据 this.state 的状态改变点赞按钮的文本.
+
+ 现在这个组件的可复用性已经很不错了, 你的同事们只要实例化一下然后插入到 DOM 里面去就好了.
+
+ 下一节我们继续优化这个例子, 让它更加通用.
+
+* 前端组件化(二): 优化 DOM 操作
+看看上一节我们的代码, 仔细留意一下 changeLikeText 函数, 这个函数包含了 DOM 操作, 现在看起来比较简单, 那是因为现在只有 isLiked 一个状态. 由于数据状态改变会导致需要我们去更新页面的内容, 所以假想一下, 如果你的组件依赖了很多状态, 那么你的组件基本全部都是 DOM 操作.
+
+一个组件的显示形态由多个状态决定的情况非常常见. 代码中混杂着对 DOM 的操作其实是一种不好的实践, 手动管理数据和 DOM 之间的关系会导致代码可维护性变差, 容易出错. 所以我们的例子这里还有优化的空间: 如何尽量减少这种手动 DOM 操作?
+
+** 状态改变 -> 构建新的 DOM 元素更新页面
+ 这里要提出的一种解决方案: 一旦状态发生改变, 就重新调用 render 方法, 构建一个新的 DOM 元素. 这样做的好处是什么呢? 好处就是你可以在 render 方法里面使用最新的 this.state 来构造不同 HTML 结构的字符串, 并且通过这个字符串构造不同的 DOM 元素. 页面就更新了! 听起来有点绕, 看看代码怎么写, 修改原来的代码为:
+
+ #+BEGIN_SRC javascript
+ class LikeButton {
+     constructor () {
+         this.state = { isLiked: false }
+     }
+
+     setState (state) {
+         this.state = state
+         this.el = this.render()
+     }
+
+     changeLikeText () {
+         this.setState({
+             isLiked: !this.state.isLiked
+         })
+     }
+
+     render () {
+         this.el = createDOMFromString(`
+         <button class='like-btn'>
+           <span class='like-text'>${this.state.isLiked ? '取消' : '点赞'}</span>
+           <span>👍</span>
+         </button>
+       `)
+         this.el.addEventListener('click', this.changeLikeText.bind(this), false)
+         return this.el
+     }
+ }
+ #+END_SRC
+ [[createDOMFromString][See createDOMFromString]]
+
+ 其实只是改了几个小地方:
+ render 函数里面的 HTML 字符串会根据 this.state 不同而不同(这里是用了 ES6 的模版字符串, 做这种事情很方便).
+ 新增一个 =setState= 函数, 这个函数接受一个对象作为参数, 它会设置实例的 state, 然后重新调用一下 render 方法.
+ 当用户点击按钮的时候, =changeLikeText= 会构建新的 state 对象, 这个新的 state, 传入 setState 函数当中.
+ 这样的结果就是, 用户每次点击, =changeLikeText= 都会调用改变组件状态然后调用 setState,setState 会调用 render,render 方法会根据 state 的不同重新构建不同的 DOM 元素.
+
+ 也就是说, 你只要调用 setState, 组件就会重新渲染. 我们顺利地消除了手动的 DOM 操作.
+
+** 重新插入新的 DOM 元素
+ 上面的改进不会有什么效果, 因为你仔细看一下就会发现, 其实重新渲染的 DOM 元素并没有插入到页面当中. 所以在这个组件外面, 你需要知道这个组件发生了改变, 并且把新的 DOM 元素更新到页面当中.
+
+ 重新修改一下 =setState= 方法:
+
+ #+CAPTION: setState
+ #+BEGIN_SRC javascript
+ ...
+     setState (state) {
+         const oldEl = this.el
+         this.state = state
+         this.el = this.render()
+         if (this.onStateChange) this.onStateChange(oldEl, this.el)
+     }
+ ...
+ #+END_SRC
+ <<setState>>
+
+ 使用这个组件的时候:
+
+ #+BEGIN_SRC javascript
+ const likeButton = new LikeButton()
+ wrapper.appendChild(likeButton.render()) // 第一次插入 DOM 元素
+ likeButton.onStateChange = (oldEl, newEl) => {
+     wrapper.insertBefore(newEl, oldEl) // 插入新的元素
+     wrapper.removeChild(oldEl) // 删除旧的元素
+ }
+ #+END_SRC
+ <<onStateChange>>
+
+ 这里每次 =setState= 都会调用 =onStateChange= 方法, 而这个方法是实例化以后时候被设置的, 所以你可以自定义 =onStateChange= 的行为. 这里做的事是, 每当 =setState= 中构造完新的 DOM 元素以后, 就会通过 =onStateChange= 告知外部插入新的 DOM 元素, 然后删除旧的元素, 页面就更新了.
+ 这里已经做到了进一步的优化了: 现在不需要再手动更新页面了.
+
+ 非一般的暴力, 因为每次 =setState= 都重新构造, 新增, 删除 DOM 元素, 会导致浏览器进行大量的重排, 严重影响性能. 不过没有关系, 这种暴力行为可以被一种叫 =Virtual-DOM= 的策略规避掉, 但这不是本文所讨论的范围.
+
+ 这个版本的点赞功能很不错, 我可以继续往上面加功能, 而且还不需要手动操作 DOM. 但是有一个不好的地方, 如果我要重新另外做一个新组件, 譬如说评论组件, 那么里面的这些 =setState= 方法要重新写一遍, 其实这些东西都可以抽出来, 变成一个通用的模式. 下一节我们把这个通用模式抽离到一个类当中.
+
+* 前端组件化(三): 抽象出公共组件类
+为了让代码更灵活, 可以写更多的组件, 我们把这种模式抽象出来, 放到一个 Component 类当中:
+
+#+CAPTION: _renderDOM
+#+BEGIN_SRC javascript
+class Component {
+    setState (state) {
+        const oldEl = this.el
+        this.state = state
+        this._renderDOM()
+        if (this.onStateChange) this.onStateChange(oldEl, this.el)
+    }
+
+    _renderDOM () {
+        this.el = createDOMFromString(this.render())
+        if (this.onClick) {
+            this.el.addEventListener('click', this.onClick.bind(this), false)
+        }
+        return this.el
+    }
+}
+#+END_SRC
+<<_renderDOM>>
+[[createDOMFromString][
+See createDOMFromString]]
+
+[[%E8%BF%94%E5%9B%9E%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84 render %E6%96%B9%E6%B3%95][See 返回字符串的 render 方法]]
+
+[[setState][See setState]]
+
+这个是一个组件父类 Component, 所有的组件都可以继承这个父类来构建. 它定义的两个方法, 一个是我们已经很熟悉的 setState, 一个是私有方法 =_renderDOM=.
+=_renderDOM= 方法会调用 this.render 来构建 DOM 元素并且监听 onClick 事件.
+=所以, 组件子类继承的时候只需要实现一个返回 HTML 字符串的 render 方法就可以了.=
+
+还有一个额外的 =mount= 的方法, 其实就是把组件的 DOM 元素插入页面, 并且在 setState 的时候更新页面:
+
+#+CAPTION: mount
+#+BEGIN_SRC javascript
+const mount = (component, wrapper) => {
+    wrapper.appendChild(component._renderDOM())
+    component.onStateChange = (oldEl, newEl) => {
+        wrapper.insertBefore(newEl, oldEl)
+        wrapper.removeChild(oldEl)
+    }
+}
+#+END_SRC
+<<mount>>
+
+[[onStateChange][See onStateChange]]
+
+这样的话我们重新写点赞组件就会变成:
+
+#+CAPTION: 返回字符串的 render 方法
+#+BEGIN_SRC javascript
+class LikeButton extends Component {
+    constructor () {
+        super()
+        this.state = { isLiked: false }
+    }
+
+    onClick () {
+        this.setState({
+            isLiked: !this.state.isLiked
+        })
+    }
+
+    render () {
+        return `
+        <button class='like-btn'>
+          <span class='like-text'>${this.state.isLiked ? '取消' : '点赞'}</span>
+          <span>👍</span>
+        </button>
+      `
+    }
+}
+
+mount(new LikeButton(), wrapper)
+#+END_SRC
+<<返回字符串的 render 方法>>
+
+[[_renderDOM][See _renderDOM]]
+
+这样还不够好. 在实际开发当中, 你可能需要给组件传入一些自定义的配置数据. 例如说想配置一下点赞按钮的背景颜色, 如果我给它传入一个参数, 告诉它怎么设置自己的颜色. 那么这个按钮的定制性就更强了. 所以我们可以给组件类和它的子类都传入一个参数 props, 作为组件的配置参数. 修改 Component 的构造函数为:
+
+#+BEGIN_SRC javascript
+...
+    constructor (props = {}) {
+        this.props = props
+    }
+...
+#+END_SRC
+
+继承的时候通过 super(props) 把 props 传给父类, 这样就可以通过 this.props 获取到配置参数:
+
+#+CAPTION: 支持读取 props 参数的 render 方法
+#+BEGIN_SRC javascript
+class LikeButton extends Component {
+    constructor (props) {
+        super(props)
+        this.state = { isLiked: false }
+    }
+
+    onClick () {
+        this.setState({
+            isLiked: !this.state.isLiked
+        })
+    }
+
+    render () {
+        return `
+        <button class='like-btn' style="background-color: ${this.props.bgColor}">
+          <span class='like-text'>
+            ${this.state.isLiked ? '取消' : '点赞'}
+          </span>
+          <span>👍</span>
+        </button>
+      `
+    }
+}
+
+mount(new LikeButton({ bgColor: 'red' }), wrapper)
+#+END_SRC
+<<支持读取 props 参数的 render 方法>>
+
+这里我们稍微修改了一下原有的 LikeButton 的 =render= 方法, 让它可以根据传入的参数 =this.props.bgColor= 来生成不同的 style 属性. 这样就可以自由配置组件的颜色了.
+
+只要有了上面那个 =Component= 类和 =mount= [[mount][See mount ]]方法加起来不足 40 行代码就可以做到组件化. 如果我们需要写另外一个组件, 只需要像上面那样, 简单地继承一下 Component 类就好了:
+
+#+BEGIN_SRC javascript
+class RedBlueButton extends Component {
+    constructor (props) {
+        super(props)
+        this.state = {
+            color: 'red'
+        }
+    }
+
+    onClick () {
+        this.setState({
+            color: 'blue'
+        })
+    }
+
+    render () {
+        return `
+        <div style='color: ${this.state.color};'>${this.state.color}</div>
+      `
+    }
+}
+#+END_SRC
+
+简单好用, 现在可以灵活地组件化页面了.Component 完整的代码可以在这里找到.
+
+#+CAPTION: reactjs-in-40
+#+BEGIN_SRC javascript
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Reactjs in 40 </title>
+    <style media="screen">
+      .like-btn { font-size: 50px; }
+    </style>
+  </head>
+
+  <body>
+    <div class='wrapper'></div>
+  </body>
+
+  <script type="text/javascript">
+    /* Component */
+    class Component {
+      constructor (props = {}) {
+        this.props = props
+      }
+      setState (state) {
+        const oldEl = this.el
+        this.state = state
+        this.el = this.renderDOM()
+        if (this.onStateChange) this.onStateChange(oldEl, this.el)
+      }
+      renderDOM () {
+        this.el = createDOMFromString(this.render())
+        if (this.onClick) {
+          this.el.addEventListener('click', this.onClick.bind(this), false)
+        }
+        return this.el
+      }
+    }
+    const createDOMFromString = (domString) => {
+      const div = document.createElement('div')
+      div.innerHTML = domString
+      return div
+    }
+    const mount = (component, wrapper) => {
+      wrapper.appendChild(component.renderDOM())
+      component.onStateChange = (oldEl, newEl) => {
+        wrapper.insertBefore(newEl, oldEl)
+        wrapper.removeChild(oldEl)
+      }
+    }
+    /* ========================================= */
+    class LikeButton extends Component {
+      constructor (props) {
+        super(props)
+        this.state = { isLiked: false }
+      }
+      onClick () {
+        this.setState({
+          isLiked: !this.state.isLiked
+        })
+      }
+      render () {
+        return `
+          <button class='like-btn' style="background-color: ${this.props.bgColor}">
+            <span class='like-text'>
+              ${this.state.isLiked ? '取消' : '点赞'}
+            </span>
+            <span>👍</span>
+          </button>
+        `
+      }
+    }
+    class RedBlueButton extends Component {
+      constructor (props) {
+        super(props)
+        this.state = {
+          color: 'red'
+        }
+      }
+      onClick () {
+        this.setState({
+          color: 'blue'
+        })
+      }
+      render () {
+        return `
+          <div style='color: ${this.state.color};'>${this.state.color}</div>
+        `
+      }
+    }
+    const wrapper = document.querySelector('.wrapper')
+    mount(new LikeButton({ bgColor: 'red' }), wrapper)
+    mount(new LikeButton(), wrapper)
+    mount(new RedBlueButton(), wrapper)
+  </script>
+</html>
+#+END_SRC
+<<reactjs-in-40>>
+
+** 总结
+ 我们用了很长的篇幅来讲一个简单的点赞的例子, 并且在这个过程里面一直在优化编写的方式. 最后抽离出来了一个类, 可以帮助我们更好的做组件化. 在这个过程里面我们学到了什么?
+
+ 组件化可以帮助我们解决前端结构的复用性问题, 整个页面可以由这样的不同的组件组合, 嵌套构成.
+
+ 一个组件有自己的显示形态(上面的 HTML 结构和内容) 行为, 组件的显示形态和行为可以由数据状态(state) 和配置参数(props) 共同决定. 数据状态和配置参数的改变都会影响到这个组件的显示形态.
+
+ 当数据变化的时候, 组件的显示需要更新. 所以如果组件化的模式能提供一种高效的方式自动化地帮助我们更新页面, 那也就可以大大地降低我们代码的复杂度, 带来更好的可维护性.
+
+ 好了, 课程结束了. 你已经学会了怎么使用 React.js 了, 因为我们已经写了一个——当然我是在开玩笑, 但是上面这个 Component 类其实和 React 的 Component 使用方式很类似. 掌握了这几节的课程, 你基本就掌握了基础的 React.js 的概念.
+
+ 接下来我们开始正式进入主题, 开始正式介绍 React.js. 你会发现, 有了前面的铺垫, 下面讲的内容理解起来会简单很多了.
