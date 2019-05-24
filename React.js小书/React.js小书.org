@@ -524,7 +524,9 @@ class RedBlueButton extends Component {
  React.js 单独使用基本上是不可能的事情. 不要指望着类似于 jQuery 下载放到 <head/> 标签就开始使用.
  使用 React.js 不管在开发阶段生产阶段都需要一堆工具和库辅助, 编译阶段你需要借助 Babel, 需要 Redux 等第三方的状态管理工具来组织代码, 如果你要写单页面应用那么你需要 React-router. 这就是所谓的"React.js 全家桶".
 
- 本课程不会教大家如何配置这些东西, 因为这不是课程的重点, 网上有很多的资料, 大家可以去参考那些资料. 我们这里会直接使用 React.js 官网所推荐使用的工具 create-react-app 工具. 它可以帮助我们一键生成所需要的工程目录, 并帮我们做好各种配置和依赖, 也帮我们隐藏了这些配置的细节. 也就是所谓的" 开箱即用".
+ 本课程不会教大家如何配置这些东西, 因为这不是课程的重点, 网上有很多的资料, 大家可以去参考那些资料.
+ 我们这里会直接使用 React.js 官网所推荐使用的工具 create-react-app 工具.
+ 它可以帮助我们一键生成所需要的工程目录, 并帮我们做好各种配置和依赖, 也帮我们隐藏了这些配置的细节. 也就是所谓的" 开箱即用".
 
  工具地址:https://github.com/facebookincubator/create-react-app
 
@@ -533,7 +535,6 @@ class RedBlueButton extends Component {
  在安装之前要确认你的机器上安装了 node.js 环境包括 npm. 如果没有安装的同学可以到 node.js 的官网下载自己电脑的对应的安装包来安装好环境.
 
  安装好环境以后, 只需要按照官网的指引安装 create-react-app 即可.
-
 
  #+BEGIN_SRC javascript :results valuse list :exports both
  npm install -g create-react-app
@@ -2157,7 +2158,7 @@ React.js 当然也允许我们处理列表数据, 但在使用 React.js 处理�
 
  在浏览器中可以看到 ComponentInput 的结构和样式都已经生效:
 
- [[file:screenshotImg/E384080A-1876-4C76-B2B8-940D3EB2E774.png.crdownload]]
+ [[file:screenshotImg/E384080A-1876-4C76-B2B8-940D3EB2E774.png]]
 
  因为还没有加入处理逻辑, 所以你输入内容, 然后点击发布是不会有什么效果的.
  用户可输入内容一个是用户名(username), 一个是评论内容(content), 我们在组件的构造函数中初始化一个 state 来保存这两个状态:
@@ -2516,7 +2517,7 @@ export default CommentApp
 
 现在代码应该是可以按照需求正常运作了, 输入用户名和评论内容, 然后点击发布:
 
-[[file:screenshotImg/62C055E7-F668-4C70-A0C0-B8989A5E3B58.png.crdownload]]
+[[file:screenshotImg/62C055E7-F668-4C70-A0C0-B8989A5E3B58.png]]
 
 为了让代码的健壮性更强, 给 handleSubmitComment 加入简单的数据检查:
 
